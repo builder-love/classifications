@@ -47,18 +47,18 @@ except Exception as e:
     raise Exception(f"Error fetching data from the database: {e}")
 
 # --- Labeled Data Retrieval ---
-gsheet_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbKlg5CJYNO3d2lrRbWWUy-71sr-oBApAJxCx2xmV931Y8CDrJ46SwVCUEoOT90LZsPpALVS_QixkE/pub?gid=1690796422&single=true&output=csv'
+gsheet_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTIjEmhgSpvITvd8BdnttCmGD05bylP9PDZW0WaeahdL0C2Fxfh5dZcd1-EmhbP_M2BJydgA81aKy1/pub?gid=1690796422&single=true&output=csv'
 try:
-    educational_df = pd.read_csv(gsheet_url)
+    dev_tooling_df = pd.read_csv(gsheet_url)
 except Exception as e:
     raise Exception(f"Error reading data from Google Sheets: {e}")
 
 # --- Data Preparation ---
 # Merge the feature data with the labeled data
-merged_df = pd.merge(repo_features_df, educational_df, on='repo')
+merged_df = pd.merge(repo_features_df, dev_tooling_df, on='repo')
 
-# drop rows where is_educational is null
-merged_df = merged_df.dropna(subset=['is_educational'])
+# drop rows where is_dev_tooling is null
+merged_df = merged_df.dropna(subset=['is_dev_tooling'])
 
 # print info about the merged dataframe
 print(f"Merged dataframe info: {merged_df.info()}")
@@ -67,74 +67,87 @@ print(f"Merged dataframe info: {merged_df.info()}")
 print(f"Merged dataframe first 5 rows: {merged_df.head()}")
 
 # print the number of rows where is_dev_tooling is 1
-print(f"Number of rows where is_educational is 1: {merged_df[merged_df['is_educational'] == 1].shape[0]}")
+print(f"Number of rows where is_dev_tooling is 1: {merged_df[merged_df['is_dev_tooling'] == 1].shape[0]}")
 
 # print the number of rows where is_dev_tooling is 0
-print(f"Number of rows where is_educational is 0: {merged_df[merged_df['is_educational'] == 0].shape[0]}")
+print(f"Number of rows where is_dev_tooling is 0: {merged_df[merged_df['is_dev_tooling'] == 0].shape[0]}")
 
 # print the number of rows where is_dev_tooling is null
-print(f"Number of rows where is_educational is null: {merged_df[merged_df['is_educational'].isnull()].shape[0]}")
+print(f"Number of rows where is_dev_tooling is null: {merged_df[merged_df['is_dev_tooling'].isnull()].shape[0]}")
 
 # Separate features (X) and the target variable (y)
 feature_columns = [
-    'has_readme', # if false, then not education
-    'is_collection_of_learnings', # if true, then is education
-    'has_app_application', # if true, then not education
-    'is_awesome_curated', # if true, then is education
-    'has_benchmark', # if true, then not education
-    'is_block_explorer', # if true, then not education
-    'is_boilerplate_scaffold_template', # if true, then not education
-    'is_bootcamp', # if true, then is education
-    'is_bot', # if true, then not education
-    'has_bounty_program', # if true, then not education
-    'has_brand_icon_logo', # if true, then not education
-    'is_cli_tool', # if true, then not education
-    'is_library', # if true, then not education
-    'is_course', # if true, then education
-    'is_demo', # if true, then education
-    'has_docs', # if true, then education
-    'is_education_related', # if true, then education
-    'is_eip_erc', # if true, then not education
-    'has_examples', # if true, then education
-    'is_feature_description', # if true, then education
-    'is_starter_project', # if true, then education
-    'is_guide', # if true, then education
-    'is_hackathon_project', # if true, then education
-    'is_hello_world', # if true, then education
-    'uses_json_rpc', # if true, then not education
-    'is_interview_related', # if true, then education
-    'is_learning_material', # if true, then education
-    'is_mcp_server', # if true, then not education
-    'is_plugin', # if true, then not education
-    'is_sample_project', # if true, then education
-    'is_sdk', # if true, then not education
-    'is_security_related', # if true, then not education
-    'has_tests_testing', # if true, then not education
-    'has_tips', # if true, then education
-    'is_tooling', # if true, then not education
-    'is_tutorial', # if true, then education
-    'is_whitepaper', # if true, then education
-    'is_workshop', # if true, then education
-    'is_wrapper', # if true, then not education
-    'is_experiment', # if true, then education
-    'is_research', # if true, then education
-    'name_is_example', # if true, then education
-    'name_is_hello_world', # if true, then education
-    'name_is_whitepaper', # if true, then education
-    'name_is_tutorial', # if true, then education
-    'name_is_boilerplate', # if true, then not education
-    'name_is_scaffold', # if true, then not education
-    'name_is_template', # if true, then not education
-    'name_is_kit', # if true, then not education
-    'name_is_starter', # if true, then education
-    'name_is_getting_started', # if true, then education
-    'name_is_quickstart', # if true, then education
-    'name_is_guide', # if true, then education
-    'name_is_hackathon', # if true, then education
-    'name_is_bootcamp', # if true, then education
-    'name_is_course', # if true, then education
-    'name_is_workshop', # if true, then education
-    'name_is_interview' # if true, then education
+    'has_readme', # if false, then false
+    'has_description', # if false, then false
+    'is_collection_of_learnings',
+    'has_app_application', 
+    'is_awesome_curated', 
+    'has_benchmark', 
+    'is_block_explorer', 
+    'is_boilerplate_scaffold_template', # if true, then true
+    'is_bootcamp', 
+    'is_bot', 
+    'has_bounty_program', 
+    'has_brand_icon_logo', 
+    'is_cli_tool', # if true, then true
+    'is_library', # if true, then true
+    'is_course', 
+    'is_demo', 
+    'has_docs', 
+    'is_education_related', 
+    'is_eip_erc', 
+    'has_examples', 
+    'is_feature_description', 
+    'is_starter_project', 
+    'is_guide', 
+    'is_hackathon_project', 
+    'is_hello_world', 
+    'uses_json_rpc', # if true, then true; to do: update training data to point rpc to infra instead of dev tooling
+    'is_interview_related', 
+    'is_learning_material', 
+    'is_mcp_server', 
+    'is_plugin', # if true, then true
+    'is_sample_project', 
+    'is_sdk', # if true, then true
+    'is_security_related', 
+    'is_fork',
+    'has_tests_testing', 
+    'has_tips', 
+    'is_tooling', # if true, then true
+    'is_tutorial', 
+    'is_whitepaper', 
+    'is_workshop', 
+    'is_wrapper', 
+    'is_experiment',
+    'is_research',
+    'name_is_example', 
+    'name_is_hello_world', 
+    'name_is_whitepaper', 
+    'name_is_tutorial', 
+    'name_is_boilerplate', # if true, then true
+    'name_is_scaffold', # if true, then true
+    'name_is_template', # if true, then true
+    'name_is_kit', # if true, then true
+    'name_is_starter', 
+    'name_is_getting_started', 
+    'name_is_quickstart', 
+    'name_is_guide', 
+    'name_is_hackathon', 
+    'name_is_bootcamp', 
+    'name_is_course', 
+    'name_is_workshop', 
+    'name_is_interview', 
+    'pm_has_main_entrypoint', # if true, then true
+    'pm_has_bin_script', # if true, then true
+    'pm_has_dependencies', # if true, then true
+    'pm_has_version_control', # if true, then true
+    'pm_has_author_cited', # if true, then true
+    'pm_has_license', # if true, then true
+    'pm_has_repository', # if true, then true
+    # for dev tooling we introduce predicted values from other classification models
+    # note, this means order of execution matters
+    'predicted_is_scaffold',
+    'predicted_is_educational'
 ] 
 
 X = merged_df[feature_columns]
@@ -142,7 +155,7 @@ X = merged_df[feature_columns]
 # Ensure all feature data is numeric (booleans will be treated as 0s and 1s)
 X = X.astype(float)
 
-y = merged_df['is_educational']
+y = merged_df['is_dev_tooling']
 
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
@@ -157,7 +170,7 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # set the n_estimators param
-n_estimators = 500
+n_estimators = 750
 
 # Initialize and train a Random Forest model
 # n_estimators is the number of trees in the forest
@@ -190,10 +203,10 @@ print("\n")
 
 # Explanation of the terms
 tn, fp, fn, tp = cm.ravel()
-print(f"True Negatives (TN): {tn} - Correctly predicted not educational")
-print(f"False Positives (FP): {fp} - Incorrectly predicted as educational")
-print(f"False Negatives (FN): {fn} - Incorrectly predicted as not educational (missed)")
-print(f"True Positives (TP): {tp} - Correctly predicted as educational")
+print(f"True Negatives (TN): {tn} - Correctly predicted not dev tooling")
+print(f"False Positives (FP): {fp} - Incorrectly predicted as dev tooling")
+print(f"False Negatives (FN): {fn} - Incorrectly predicted as not dev tooling (missed)")
+print(f"True Positives (TP): {tp} - Correctly predicted as dev tooling")
 
 # Get importance scores
 importance = model_balanced.feature_importances_
@@ -235,10 +248,10 @@ print("\n")
 
 # Explanation of the terms
 tn, fp, fn, tp = cm.ravel()
-print(f"True Negatives (TN): {tn} - Correctly predicted not educational")
-print(f"False Positives (FP): {fp} - Incorrectly predicted as educational")
-print(f"False Negatives (FN): {fn} - Incorrectly predicted as not educational (missed)")
-print(f"True Positives (TP): {tp} - Correctly predicted as educational")
+print(f"True Negatives (TN): {tn} - Correctly predicted not dev tooling")
+print(f"False Positives (FP): {fp} - Incorrectly predicted as dev tooling")
+print(f"False Negatives (FN): {fn} - Incorrectly predicted as not dev tooling (missed)")
+print(f"True Positives (TP): {tp} - Correctly predicted as dev tooling")
 
 ## ----------------------------------------------------- apply the model to the population ------------------------------------------------- ##
 
@@ -294,7 +307,7 @@ print(f"Generated {len(final_predictions)} predictions for the population using 
 ## ------------------------- add the predictions to the population dataframe
 
 # Add the predictions as a new column to the population DataFrame
-repo_features_df['predicted_is_educational'] = final_predictions
+repo_features_df['predicted_is_dev_tooling'] = final_predictions
 
 # --- View Results ---
 
@@ -304,14 +317,14 @@ print(repo_features_df.head())
 
 # See the distribution of the predictions
 print("\n--- Prediction Counts ---")
-print(repo_features_df['predicted_is_educational'].value_counts())
+print(repo_features_df['predicted_is_dev_tooling'].value_counts())
 
 ## --------------------------------------- write predictions back to database --------------------------------------- ##
 
 print("\nPreparing to write predictions back to the database...")
 
-# Create a new DataFrame with only repo and predicted_is_educational
-predictions_to_write = repo_features_df[['repo', 'predicted_is_educational']]
+# Create a new DataFrame with only repo and predicted_is_dev_tooling
+predictions_to_write = repo_features_df[['repo', 'predicted_is_dev_tooling']]
 
 # Use a transaction to ensure the entire operation succeeds or fails together.
 try:
@@ -329,7 +342,7 @@ try:
                 schema='clean',
                 if_exists='replace',
                 index=False,
-                dtype={'repo': sqlalchemy.types.Text, 'predicted_is_educational': sqlalchemy.types.Boolean}
+                dtype={'repo': sqlalchemy.types.Text, 'predicted_is_dev_tooling': sqlalchemy.types.Boolean}
             )
             print("Temporary table created successfully.")
 
@@ -338,7 +351,7 @@ try:
             update_sql = text(f"""
                 UPDATE clean.project_repos_features AS target
                 SET
-                    predicted_is_educational = source.predicted_is_educational
+                    predicted_is_dev_tooling = source.predicted_is_dev_tooling
                 FROM clean.{temp_table_name} AS source
                 WHERE
                     target.repo = source.repo;

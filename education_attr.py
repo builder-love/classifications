@@ -77,64 +77,73 @@ print(f"Number of rows where is_educational is null: {merged_df[merged_df['is_ed
 
 # Separate features (X) and the target variable (y)
 feature_columns = [
-    'has_readme', # if false, then not education
-    'is_collection_of_learnings', # if true, then is education
-    'has_app_application', # if true, then not education
-    'is_awesome_curated', # if true, then is education
-    'has_benchmark', # if true, then not education
-    'is_block_explorer', # if true, then not education
-    'is_boilerplate_scaffold_template', # if true, then not education
-    'is_bootcamp', # if true, then is education
-    'is_bot', # if true, then not education
-    'has_bounty_program', # if true, then not education
-    'has_brand_icon_logo', # if true, then not education
-    'is_cli_tool', # if true, then not education
-    'is_library', # if true, then not education
-    'is_course', # if true, then education
-    'is_demo', # if true, then education
-    'has_docs', # if true, then education
-    'is_education_related', # if true, then education
-    'is_eip_erc', # if true, then not education
-    'has_examples', # if true, then education
-    'is_feature_description', # if true, then education
-    'is_starter_project', # if true, then education
-    'is_guide', # if true, then education
-    'is_hackathon_project', # if true, then education
-    'is_hello_world', # if true, then education
-    'uses_json_rpc', # if true, then not education
-    'is_interview_related', # if true, then education
-    'is_learning_material', # if true, then education
-    'is_mcp_server', # if true, then not education
-    'is_plugin', # if true, then not education
-    'is_sample_project', # if true, then education
-    'is_sdk', # if true, then not education
-    'is_security_related', # if true, then not education
-    'has_tests_testing', # if true, then not education
-    'has_tips', # if true, then education
-    'is_tooling', # if true, then not education
-    'is_tutorial', # if true, then education
-    'is_whitepaper', # if true, then education
-    'is_workshop', # if true, then education
-    'is_wrapper', # if true, then not education
-    'is_experiment', # if true, then education
-    'is_research', # if true, then education
-    'name_is_example', # if true, then education
-    'name_is_hello_world', # if true, then education
-    'name_is_whitepaper', # if true, then education
-    'name_is_tutorial', # if true, then education
-    'name_is_boilerplate', # if true, then not education
-    'name_is_scaffold', # if true, then not education
-    'name_is_template', # if true, then not education
-    'name_is_kit', # if true, then not education
-    'name_is_starter', # if true, then education
-    'name_is_getting_started', # if true, then education
-    'name_is_quickstart', # if true, then education
-    'name_is_guide', # if true, then education
-    'name_is_hackathon', # if true, then education
-    'name_is_bootcamp', # if true, then education
-    'name_is_course', # if true, then education
-    'name_is_workshop', # if true, then education
-    'name_is_interview' # if true, then education
+    'has_readme', # if false, then false
+    'has_description', # if false, then false
+    'is_collection_of_learnings',
+    'has_app_application', 
+    'is_awesome_curated', # if true, then true
+    'has_benchmark', 
+    'is_block_explorer', 
+    'is_boilerplate_scaffold_template',
+    'is_bootcamp', # if true, then true
+    'is_bot', 
+    'has_bounty_program', 
+    'has_brand_icon_logo', 
+    'is_cli_tool', 
+    'is_library', 
+    'is_course', # if true, then true
+    'is_demo', # if true, then true
+    'has_docs', # if true, then true
+    'is_education_related', # if true, then true
+    'is_eip_erc', 
+    'has_examples', # if true, then true
+    'is_feature_description', # if true, then true
+    'is_starter_project', # if true, then true
+    'is_guide', # if true, then true
+    'is_hackathon_project', # if true, then true
+    'is_hello_world', # if true, then true
+    'uses_json_rpc', 
+    'is_interview_related', # if true, then true
+    'is_learning_material', # if true, then true
+    'is_mcp_server', 
+    'is_plugin',
+    'is_sample_project', # if true, then true
+    'is_sdk', 
+    'is_security_related', 
+    'is_fork',
+    'has_tests_testing', # if true, then true
+    'has_tips', 
+    'is_tooling', 
+    'is_tutorial', # if true, then true 
+    'is_whitepaper', # if true, then true
+    'is_workshop', # if true, then true
+    'is_wrapper', 
+    'is_experiment',# if true, then true
+    'is_research',# if true, then true
+    'name_is_example', # if true, then true
+    'name_is_hello_world', # if true, then true
+    'name_is_whitepaper', # if true, then true
+    'name_is_tutorial', # if true, then true
+    'name_is_boilerplate', 
+    'name_is_scaffold', 
+    'name_is_template', 
+    'name_is_kit', 
+    'name_is_starter', # if true, then true 
+    'name_is_getting_started', # if true, then true
+    'name_is_quickstart', # if true, then true
+    'name_is_guide', # if true, then true
+    'name_is_hackathon', # if true, then true
+    'name_is_bootcamp', # if true, then true
+    'name_is_course', # if true, then true
+    'name_is_workshop', # if true, then true
+    'name_is_interview', # if true, then true
+    'pm_has_main_entrypoint', 
+    'pm_has_bin_script', 
+    'pm_has_dependencies', 
+    'pm_has_version_control', 
+    'pm_has_author_cited', 
+    'pm_has_license', 
+    'pm_has_repository' 
 ] 
 
 X = merged_df[feature_columns]
@@ -157,7 +166,7 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # set the n_estimators param
-n_estimators = 500
+n_estimators = 750
 
 # Initialize and train a Random Forest model
 # n_estimators is the number of trees in the forest
@@ -207,42 +216,13 @@ feat_importances = pd.Series(importance, index=feature_names)
 # Sort the Series in descending order (most important features first)
 sorted_importances = feat_importances.sort_values(ascending=False)
 
-# 4. Print the sorted list
+# Print the sorted list
 print("--- Feature Importances (Sorted) ---")
 print(sorted_importances)
 
-# Get the predicted probabilities for the test set
-# We only need the probability of the positive class (class 1)
-y_pred_proba = model_balanced.predict_proba(X_test_scaled)
-positive_class_proba = y_pred_proba[:, 1]
-
-# Set a new, lower threshold to be more "aggressive"
-new_threshold = 0.4  # Example: predict True if probability is 40% or more
-
-# Apply the new threshold to get aggressive predictions
-y_pred_aggressive = (positive_class_proba >= new_threshold).astype(int)
-
-print("\n--- Aggressive Predictions (Threshold = 0.4) ---")
-cm = confusion_matrix(y_test, y_pred_aggressive)
-print(classification_report(y_test, y_pred_aggressive))
-
-print("Confusion Matrix (Lowered threshold = 0.4):")
-print("                 Predicted")
-print("                 False    True")
-print("Actual False    {:<8} {:<8}".format(cm[0][0], cm[0][1]))
-print("       True     {:<8} {:<8}".format(cm[1][0], cm[1][1]))
-print("\n")
-
-# Explanation of the terms
-tn, fp, fn, tp = cm.ravel()
-print(f"True Negatives (TN): {tn} - Correctly predicted not educational")
-print(f"False Positives (FP): {fp} - Incorrectly predicted as educational")
-print(f"False Negatives (FN): {fn} - Incorrectly predicted as not educational (missed)")
-print(f"True Positives (TP): {tp} - Correctly predicted as educational")
-
 ## ----------------------------------------------------- apply the model to the population ------------------------------------------------- ##
 
-# 'repo_features_df' has the population of 300,000 repos
+# 'repo_features_df' has the population of repos
 # 'merged_df' has labels
 
 # Apply the EXACT SAME feature engineering to the new data
@@ -279,17 +259,9 @@ final_model.fit(X_full_scaled, y)
 print("Final model has been trained on the full labeled dataset.")
 
 ## ------------------------- apply the final model to the population
+final_predictions = final_model.predict(X_population_scaled)
 
-# Get the predicted probabilities for the population set
-population_proba = final_model.predict_proba(X_population_scaled)
-
-# Isolate the probability of the positive class (class 1)
-positive_class_proba = population_proba[:, 1]
-
-# Apply the optimal threshold to get the final predictions
-final_predictions = (positive_class_proba >= new_threshold).astype(int)
-
-print(f"Generated {len(final_predictions)} predictions for the population using a threshold of {new_threshold}.")
+print(f"Generated {len(final_predictions)} predictions for the population using the default threshold of 0.5.")
 
 ## ------------------------- add the predictions to the population dataframe
 
